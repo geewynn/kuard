@@ -44,3 +44,42 @@ kubectl get pods -o wide --selector=app=alpaca
 BANDICOOT_POD=$(kubectl get pods -l app=bandicoot \
     -o jsonpath='{.items[0].metadata.name}')
 kubectl port-forward $BANDICOOT_POD 48858:8080
+
+
+10. 
+
+kubectl create -f kuard-deployment.yaml
+
+kubectl get deployments kuard \
+  -o jsonpath --template {.spec.selector.matchLabels}
+
+kubectl get replicasets --selector=run=kuard
+
+kubectl scale deployments kuard --replicas=2
+
+kubectl scale replicasets kuard-1128242161 --replicas=1
+
+kubectl get deployments kuard -o yaml > kuard-deployment.yaml
+kubectl replace -f kuard-deployment.yaml --save-config
+
+kubectl describe deployments kuard
+
+kubectl rollout status deployments kuard
+
+kubectl get replicasets -o wide
+
+kubectl rollout pause deployments kuard
+
+kubectl rollout resume deployments kuard
+
+kubectl rollout history deployment kuard
+
+kubectl rollout history deployment kuard --revision=2
+
+kubectl rollout undo deployments kuard
+
+kubectl rollout undo deployments kuard --to-revision=3
+
+kubectl delete deployments kuard
+
+kubectl delete -f kuard-deployment.yaml
